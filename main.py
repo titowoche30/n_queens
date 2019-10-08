@@ -14,18 +14,22 @@ if __name__ == '__main__':
     queens = np.arange(0,n)
     
     tab = Tab(queens)
-    sa = SA(tab,0.0001,100)
-    aval,tab = sa.run()
     
-    print('aval do SA=',aval)
+    vet = list(range(1000,5001,500))
+    
+    for i in vet:
+        sa = SA(tab,0.0001,i)
+        aval,nada = sa.run()
+        print('aval do SA com {} iteracoes={}'.format(i,aval))
+    
     tabSA = tab.tabuleiro()
     
     ##---------------------HC-----------------##
-    queens = np.arange(0,n)
-    
-    tab2 = Tab(queens)
-    hc = HC(tab2)
-    aval,tab2=hc.run()
-    
-    print('aval do HC=',aval)
-    tabHC = tab2.tabuleiro()
+#    queens = np.arange(0,n)
+#    
+#    tab2 = Tab(queens)
+#    hc = HC(tab2)
+#    aval,tab2=hc.run()
+#    
+#    print('aval do HC=',aval)
+#    tabHC = tab2.tabuleiro()
