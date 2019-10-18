@@ -26,8 +26,7 @@ class Tab():
                     
         return cont
     
-    
-    def tabuleiro(self):
+    def __str__(self):
         var = ''
         for i in range(self.n):
             for j in range(self.n):

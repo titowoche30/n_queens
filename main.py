@@ -9,20 +9,18 @@ from tab import Tab
 #i x v[i]
 
 if __name__ == '__main__':
-    n = 40
+    n = 9999999
     ##---------------------SA-----------------##
     queens = np.arange(0,n)
-    
     tab = Tab(queens)
     
-    vet = list(range(1000,5001,500))
+    sa = SA(tab,0.000001,4000)
+    aval,tab = sa.run()
+    print('aval=',aval)
+    print(tab)
+        
     
-    for i in vet:
-        sa = SA(tab,0.0001,i)
-        aval,nada = sa.run()
-        print('aval do SA com {} iteracoes={}'.format(i,aval))
-    
-    tabSA = tab.tabuleiro()
+    #tabSA = tab.tabuleiro()
     
     ##---------------------HC-----------------##
 #    queens = np.arange(0,n)
