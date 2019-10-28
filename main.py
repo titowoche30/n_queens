@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # b = Board(n)
     # print(b)
 
-    ga = GA(n, 10, 20, .005, 0.10)
+    ga = GA(n, 10, 20, .005, .5)
     ga.run()
 
 
