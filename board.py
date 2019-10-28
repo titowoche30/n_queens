@@ -36,8 +36,12 @@ class Board:
     def __bool__(self):
         return self.fitness == 0
 
-    def __lt__(self, board):
-        return self.fitness < board.fitness
+    def __lt__(self, el):
+        if isinstance(el, Board):
+            return self.fitness < el.fitness
+
+        if isinstance(el, (int, float)):
+            return self.fitness < el
 
     def __getitem__(self, idx):
         return self.positions[idx]
@@ -53,9 +57,9 @@ class Board:
         for i in range(self.size):
             for j in range(self.size):
                 if self.positions[i] == j:
-                    _str += '[\033[32mX\033[m]' if i not in self.conflicts else '[\033[31mX\033[m]'
+                    _str += '[\033[30;42mX\033[m]' if i not in self.conflicts else '[\033[30;41mX\033[m]'
                 else:
-                    _str += '[ ]'
+                    _str += '[]'
             _str += '\n'
         # _str += 'conflicts = ' + str(self.conflicts)
         _str += repr(self)
