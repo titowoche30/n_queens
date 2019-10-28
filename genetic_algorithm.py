@@ -54,48 +54,41 @@ class GA():
             for ind in self.current_generation
         ]
 
+        best = float('inf')
         for i in range(self.generation_size):
             el_idx = np.random.choice(range(self.generation_size), p=probs)
             next_generation[i] = self.current_generation[el_idx]
 
+            # Keep tracking of the best element of the new generation
+            if next_generation[i] < best:
+                best = next_generation[i]
+
         self.current_generation = next_generation
+        self.best_element = best
 
     def __assemble_child(self, parent_1, parent_2):
         '''
             Let god guides you 1
         '''
-        print(parent_1)
-        print(parent_2)
 
         new_pos = self.board_size * [None]
-        uniques = list(set((
-            self.all_positions - 
-            ((set(j for (i, j) in parent_1)) | set(j for (i, j) in parent_2))
-        )))
-        np.random.shuffle(uniques)
-
-        print(new_pos)
-        print(uniques)
+        seen = []
 
         for (i, j) in parent_1:
             new_pos[i] = j
+            seen.append(j)
 
         for (i, j) in parent_2:
-            new_pos[i] = j
+            if j not in seen:
+                new_pos[i] = j
 
-        # print('UNIQUES LEN = ' + str(len(uniques)))
-        # print('NONE LEN    = ' + str(len([None for p in new_pos if p is None])))
-        # print(uniques)
-        # print(new_pos)
-        k = 0
+        uniques = list(self.all_positions - set(new_pos))
+        np.random.shuffle(uniques)
+        uniques = iter(uniques)
+
         for i in range(self.board_size):
             if new_pos[i] is None:
-                # a = next(uniques)
-                # print(a)
-                new_pos[i] = uniques[k]
-                k += 1
-        # print(new_pos)
-        # print('')
+                new_pos[i] = next(uniques)
 
         return Board(self.board_size, new_pos)
 
