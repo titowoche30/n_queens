@@ -33,9 +33,6 @@ class Board:
                     
         return cont, list(set(conflicts))
 
-    def index_of(self, value):
-        return self.positions.index(value)
-
     def __bool__(self):
         return self.fitness == 0
 
