@@ -99,20 +99,19 @@ class GA():
         for i in (0, self.upper_bound, 2):
             if np.random.random() < self.crossover_rate:
 
-                cross_point = np. random.randint(1, self.board_size-1)
-
                 parent_1 = self.current_generation[i]
                 parent_2 = self.current_generation[i+1]
 
-                no_conflicts_1 = set(range(self.board_size)) - set(parent_1.conflicts)
+                # Get all the pairs in the form of (i , V[i]) that has no colisions
+                # all_positions = {k : 0 <= k < board_size}
+                no_conflicts_1 = self.all_positions - set(parent_1.conflicts)
                 no_conflicts_1 = set((row, parent_1[row]) for row in no_conflicts_1)
 
-                no_conflicts_2 = set(range(self.board_size)) - set(parent_2.conflicts)
+                no_conflicts_2 = self.all_positions - set(parent_2.conflicts)
                 no_conflicts_2 = set((row, parent_2[row]) for row in no_conflicts_2)
 
                 self.current_generation[i] = self.__assemble_child(no_conflicts_1, no_conflicts_2)
                 self.current_generation[i+1] = self.__assemble_child(no_conflicts_2, no_conflicts_1)
-                # input()
 
     def mutation(self):
         '''
