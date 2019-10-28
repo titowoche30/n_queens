@@ -23,6 +23,7 @@ class GA():
         self.mutation_rate = mutation_rate
         self.crossover_rate = crossover_rate
         self.current_generation = [Board(self.board_size) for _ in range(self.generation_size)]
+        self.best_element = min(self.current_generation)
         
         self.upper_bound = self.generation_size-2
         self.upper_bound = self.upper_bound if self.upper_bound % 2 == 0 else self.upper_bound-1
@@ -113,6 +114,13 @@ class GA():
                 self.current_generation[i] = self.__assemble_child(no_conflicts_1, no_conflicts_2)
                 self.current_generation[i+1] = self.__assemble_child(no_conflicts_2, no_conflicts_1)
 
+                # Check if one of the 2 new elements is best than the current best
+                if self.current_generation[i] < self.best_element:
+                    self.best_element = self.current_generation[i]
+
+                if self.current_generation[i+1] < self.best_element:
+                    self.best_element = self.current_generation[i+1]
+
     def mutation(self):
         '''
         Swap 2 randomly selected queens
@@ -124,16 +132,19 @@ class GA():
                 new_pos[idx1], new_pos[idx2] = new_pos[idx2], new_pos[idx1]
                 self.current_generation[i] = Board(self.board_size, new_pos)
 
+                # Check if mutation has created a best element than the current one
+                if self.current_generation[i] < self.best_element:
+                    self.best_element = self.current_generation[i]
+
     def run(self):
-        i = 0
+        i = 1
 
         before = date.now()
-        while not any(self.current_generation):
+        while not any(self.current_generation): # or i <= self.max_generations
 
-            heap.heapify(self.current_generation)            
-            # print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(
-            #     i+1, self.generation_fitness(), repr(self.current_generation[0])
-            # ), end='\r', flush=True)
+            print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(
+                i, self.generation_fitness(), repr(self.current_generation[0])
+            ), end='\r', flush=True)
 
             self.proportional_selection()
             self.crossover()
@@ -141,11 +152,13 @@ class GA():
 
             i += 1
 
-        print('\n\nLAST GENERATION: ' + str(i+1))
+        self.best_element = min(self.current_generation)
+
+        print((80 + self.board_size) * ' ')
+        print('\nLAST GENERATION: ' + str(i))
         print('LAST GENERATION FITNESS: ' + str(self.generation_fitness()))
         print('ELAPSED TIME: ' + str(date.now() - before))
 
-        heap.heapify(self.current_generation)
         pprint(self.current_generation)
         print('')
-        print(self.current_generation[0])
+        print(self.best_element)
