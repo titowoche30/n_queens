@@ -23,6 +23,7 @@ class GA():
         self.mutation_rate = mutation_rate
         self.crossover_rate = crossover_rate
         self.current_generation = [Board(self.board_size) for _ in range(self.generation_size)]
+        self.best_element = min(self.current_generation)
         
         self.upper_bound = self.generation_size-2
         self.upper_bound = self.upper_bound if self.upper_bound % 2 == 0 else self.upper_bound-1
@@ -54,48 +55,41 @@ class GA():
             for ind in self.current_generation
         ]
 
+        best = float('inf')
         for i in range(self.generation_size):
             el_idx = np.random.choice(range(self.generation_size), p=probs)
             next_generation[i] = self.current_generation[el_idx]
 
+            # Keep tracking of the best element of the new generation
+            if next_generation[i] < best:
+                best = next_generation[i]
+
         self.current_generation = next_generation
+        self.best_element = best
 
     def __assemble_child(self, parent_1, parent_2):
         '''
             Let god guides you 1
         '''
-        print(parent_1)
-        print(parent_2)
 
         new_pos = self.board_size * [None]
-        uniques = list(set((
-            self.all_positions - 
-            ((set(j for (i, j) in parent_1)) | set(j for (i, j) in parent_2))
-        )))
-        np.random.shuffle(uniques)
-
-        print(new_pos)
-        print(uniques)
+        seen = []
 
         for (i, j) in parent_1:
             new_pos[i] = j
+            seen.append(j)
 
         for (i, j) in parent_2:
-            new_pos[i] = j
+            if j not in seen:
+                new_pos[i] = j
 
-        # print('UNIQUES LEN = ' + str(len(uniques)))
-        # print('NONE LEN    = ' + str(len([None for p in new_pos if p is None])))
-        # print(uniques)
-        # print(new_pos)
-        k = 0
+        uniques = list(self.all_positions - set(new_pos))
+        np.random.shuffle(uniques)
+        uniques = iter(uniques)
+
         for i in range(self.board_size):
             if new_pos[i] is None:
-                # a = next(uniques)
-                # print(a)
-                new_pos[i] = uniques[k]
-                k += 1
-        # print(new_pos)
-        # print('')
+                new_pos[i] = next(uniques)
 
         return Board(self.board_size, new_pos)
 
@@ -106,20 +100,26 @@ class GA():
         for i in (0, self.upper_bound, 2):
             if np.random.random() < self.crossover_rate:
 
-                cross_point = np. random.randint(1, self.board_size-1)
-
                 parent_1 = self.current_generation[i]
                 parent_2 = self.current_generation[i+1]
 
-                no_conflicts_1 = set(range(self.board_size)) - set(parent_1.conflicts)
+                # Get all the pairs in the form of (i , V[i]) that has no colisions
+                # all_positions = {k : 0 <= k < board_size}
+                no_conflicts_1 = self.all_positions - set(parent_1.conflicts)
                 no_conflicts_1 = set((row, parent_1[row]) for row in no_conflicts_1)
 
-                no_conflicts_2 = set(range(self.board_size)) - set(parent_2.conflicts)
+                no_conflicts_2 = self.all_positions - set(parent_2.conflicts)
                 no_conflicts_2 = set((row, parent_2[row]) for row in no_conflicts_2)
 
                 self.current_generation[i] = self.__assemble_child(no_conflicts_1, no_conflicts_2)
                 self.current_generation[i+1] = self.__assemble_child(no_conflicts_2, no_conflicts_1)
-                # input()
+
+                # Check if one of the 2 new elements is best than the current best
+                if self.current_generation[i] < self.best_element:
+                    self.best_element = self.current_generation[i]
+
+                if self.current_generation[i+1] < self.best_element:
+                    self.best_element = self.current_generation[i+1]
 
     def mutation(self):
         '''
@@ -132,16 +132,19 @@ class GA():
                 new_pos[idx1], new_pos[idx2] = new_pos[idx2], new_pos[idx1]
                 self.current_generation[i] = Board(self.board_size, new_pos)
 
+                # Check if mutation has created a best element than the current one
+                if self.current_generation[i] < self.best_element:
+                    self.best_element = self.current_generation[i]
+
     def run(self):
-        i = 0
+        i = 1
 
         before = date.now()
-        while not any(self.current_generation):
+        while not any(self.current_generation): # or i <= self.max_generations
 
-            heap.heapify(self.current_generation)            
-            # print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(
-            #     i+1, self.generation_fitness(), repr(self.current_generation[0])
-            # ), end='\r', flush=True)
+            print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(
+                i, self.generation_fitness(), repr(self.current_generation[0])
+            ), end='\r', flush=True)
 
             self.proportional_selection()
             self.crossover()
@@ -149,11 +152,13 @@ class GA():
 
             i += 1
 
-        print('\n\nLAST GENERATION: ' + str(i+1))
+        self.best_element = min(self.current_generation)
+
+        print((80 + self.board_size) * ' ')
+        print('\nLAST GENERATION: ' + str(i))
         print('LAST GENERATION FITNESS: ' + str(self.generation_fitness()))
         print('ELAPSED TIME: ' + str(date.now() - before))
 
-        heap.heapify(self.current_generation)
         pprint(self.current_generation)
         print('')
-        print(self.current_generation[0])
+        print(self.best_element)
