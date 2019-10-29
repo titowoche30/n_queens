@@ -5,6 +5,7 @@ from tab import Tab
 from genetic_algorithm import GA
 from board import Board
 import sys
+from SA import SA
 
 #queen = [5,3,2,1,4,0]         Coluna da rainha da linha i.
 #                              Nesse exemplo a rainha da linha 0 estaria 
@@ -16,20 +17,26 @@ if __name__ == '__main__':
 
     # b = Board(n)
     # print(b)
+    
+    limite = '*'*30
+    print(limite+"GENETIC ALGORITHM"+limite)    
+    
 
     ga = GA(n, 10, 20, .005, .5)
     ga.run()
 
 
     ##---------------------SA-----------------##
-    # queens = np.arange(0,n)
-    # tab = Tab(queens)
-#    
-#    sa = SA(tab,0.000001,4000)
-#    aval,tab = sa.run()
-#    print('aval=',aval)
-#    print(tab)
-        
+    
+    queens = np.arange(0,n)
+    tab = Tab(queens)
+    
+    print("\n\n"+limite+"SIMULATED ANNEALING"+limite)
+    sa = SA(tab,0.000001,4000)
+    aval,tab = sa.run()
+    print('aval=',aval)
+    print(tab)
+    
     # ga = GA(tab,10,20,0.01)
     # pi = ga.populacao_inicial()
     # ga.seleciona_individuo_cruzamento()

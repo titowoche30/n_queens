@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+#from board import Board
 from tab import Tab
 
 class SA():
@@ -7,8 +8,7 @@ class SA():
         self.tab = tab
         self.tf = tf
         self.it = it
-        
-        
+ 
     def random_tab(self,m):
         queens0 = np.arange(m)
         np.random.shuffle(queens0)
@@ -29,7 +29,7 @@ class SA():
             tab.queens[x[i]],tab.queens[x[i+1]] = tab.queens[x[i+1]],tab.queens[x[i]]
             
         return tab
-    
+                
     
     def run(self):
         alpha = 0.1
@@ -40,6 +40,7 @@ class SA():
         aux = copy.deepcopy(self.random_tab(n))
         
         FA_best = best.AF()
+        
         T = (FA_best*alpha) / np.log(n)
         lbda = (self.tf/T) ** (1.0/self.it)
         
@@ -50,7 +51,7 @@ class SA():
                     aux = copy.deepcopy(current)
                     if best.AF() > aux.AF():
                         best = copy.deepcopy(aux)
-                        #print('best=',best.AF())
+                        print('best=',best.AF())
                 elif np.random.rand() <  self.P(aux.AF() - current.AF(), T):
                     aux = copy.deepcopy(current)
                         

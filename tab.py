@@ -31,10 +31,9 @@ class Tab():
         for i in range(self.n):
             for j in range(self.n):
                 if self.queens[i] == j:
-                    var = var + '[X]'
+                    var = var + '[\033[30;42mX\033[m]'
                 else:
                     var = var + '[]'
             var = var + '\n'
         
         return var
-    
