@@ -22,7 +22,7 @@ if __name__ == '__main__':
     print(limite+"GENETIC ALGORITHM"+limite)    
     
 
-    ga = GA(n, 10, 20, .005, .5)
+    ga = GA(n, 20, 10000, .005, .5)
     ga.run()
 
 
@@ -34,16 +34,9 @@ if __name__ == '__main__':
     print("\n\n"+limite+"SIMULATED ANNEALING"+limite)
     sa = SA(tab,0.000001,4000)
     aval,tab = sa.run()
-    print('aval=',aval)
+    print('FITNESS =',aval)
     print(tab)
     
-    # ga = GA(tab,10,20,0.01)
-    # pi = ga.populacao_inicial()
-    # ga.seleciona_individuo_cruzamento()
-    # ga.crossover()
-    # ga.run()
-    
-    #tabSA = tab.tabuleiro()
     
     ##---------------------HC-----------------##
 #    queens = np.arange(0,n)

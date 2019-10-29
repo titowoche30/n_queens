@@ -51,7 +51,7 @@ class SA():
                     aux = copy.deepcopy(current)
                     if best.AF() > aux.AF():
                         best = copy.deepcopy(aux)
-                        print('best=',best.AF())
+                        print('BEST_EVALUATE =',best.AF())
                 elif np.random.rand() <  self.P(aux.AF() - current.AF(), T):
                     aux = copy.deepcopy(current)
                         

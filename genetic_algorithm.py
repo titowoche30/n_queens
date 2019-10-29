@@ -141,6 +141,7 @@ class GA():
 
         before = date.now()
         while not any(self.current_generation): # or i <= self.max_generations
+        #while(i <= self.max_generations):
 
             print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(
                 i, self.generation_fitness(), repr(self.current_generation[0])
