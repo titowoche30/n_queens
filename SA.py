@@ -4,7 +4,7 @@ import copy
 from tab import Tab
 
 class SA():
-    def __init__(self,tab,tf,it): #tf: acceptance rate of a worst solution -------- it: quantity of iterations
+    def __init__(self,tab,tf,it): #tf: final temperature -------- it: quantity of iterations
         self.tab = tab
         self.tf = tf
         self.it = it
