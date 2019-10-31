@@ -4,7 +4,7 @@ import copy
 from tab import Tab
 
 class SA():
-    def __init__(self,tab,tf,it):
+    def __init__(self,tab,tf,it): #tf: acceptance rate of a worst solution -------- it: quantity of iterations
         self.tab = tab
         self.tf = tf
         self.it = it
@@ -15,14 +15,14 @@ class SA():
         return Tab(queens0)
 
         
-    def P(self,delta,tempAtual):
+    def P(self,delta,tempAtual): #probability of a solution be accepted, based on the formula.
         try:
             return np.exp(delta/tempAtual)
         except OverflowError:
             return 1    
     
     
-    def pertub(self,tab,swaps):
+    def pertub(self,tab,swaps): #apply a perturbation, swapping the positions of queens.
         tab = copy.deepcopy(tab)                    #Só aceite.
         x = np.random.randint(0,tab.n,size=swaps)
         for i in range(swaps-1):

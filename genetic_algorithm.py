@@ -48,7 +48,7 @@ class GA():
         In order to get SUM{i=1, n}(1 - P(x_i)) = 1, we must divide it by n - 1
         '''
 
-        next_generation = self.generation_size * [None]
+        next_generation = self.generation_size * [None] #create a list with generation_size elements and all the positions are null
         gen_fit = self.generation_fitness()
         probs = [ # OBS_1
             (1 - ind.fitness/gen_fit) / (self.generation_size-1)
@@ -67,7 +67,7 @@ class GA():
         self.current_generation = next_generation
         self.best_element = best
 
-    def __assemble_child(self, parent_1, parent_2):
+    def __assemble_child(self, parent_1, parent_2): #prohibits the existence of more than one queen in a row.
         '''
             Let god guides you 1
         '''
@@ -140,7 +140,7 @@ class GA():
         i = 1
 
         before = date.now()
-        while not any(self.current_generation): # or i <= self.max_generations
+        while not any(self.current_generation): # or i <= self.max_generations #check if a element in current_generation is solution
         #while(i <= self.max_generations):
 
             print('GEN: {:>10d}, GEN_FIT: {:>10d}, BEST_IND: {}  '.format(

@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print("\n\n"+limite+"SIMULATED ANNEALING"+limite)
     sa = SA(tab,0.000001,4000)
     aval,tab = sa.run()
-    print('FITNESS =',aval)
+    print('FITNESS = ',aval)
     print(tab)
     
     
